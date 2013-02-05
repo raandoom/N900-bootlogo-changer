@@ -1,0 +1,19 @@
+#!/bin/sh
+
+if [ -f /opt/qt-logo-changer/dd_mtd0 ]; then
+	rm /opt/qt-logo-changer/dd_mtd0
+fi
+
+if [ -f /opt/qt-logo-changer/logo.out ]; then
+	rm /opt/qt-logo-changer/logo.out
+fi
+
+if [ -f /opt/qt-logo-changer/usb.out ]; then
+	rm /opt/qt-logo-changer/usb.out
+fi
+
+if [ -f /opt/qt-logo-changer/rd.out ]; then
+	rm /opt/qt-logo-changer/rd.out
+fi
+
+exit 0

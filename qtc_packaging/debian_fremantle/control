@@ -1,0 +1,14 @@
+Source: n900-bootlogo-changer
+Section: user/utilities
+Priority: extra
+Maintainer: RaANdOoM <random.m3m@gmail.com>
+Build-Depends: debhelper (>= 5), libqt4-dev
+Standards-Version: 3.7.3
+Homepage: https://github.com/raandoom
+
+Package: n900-bootlogo-changer
+Architecture: armel
+Depends: ${shlibs:Depends}, ${misc:Depends}, rootsh
+Description: Customize your N900 bootlogo
+ Application help you to change your bootlogo with any image
+XB-Maemo-Display-Name: BootLogo Changer

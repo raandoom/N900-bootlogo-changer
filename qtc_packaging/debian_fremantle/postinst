@@ -1,0 +1,6 @@
+#!/bin/sh
+
+chmod 777 /opt/n900-bootlogo-changer
+chmod 777 /opt/n900-bootlogo-changer/flashnolo.sh
+
+exit 0

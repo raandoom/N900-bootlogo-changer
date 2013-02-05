@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Version=1.0
+Name=BootLogo Changer
+Exec=/opt/n900-bootlogo-changer/bin/n900-bootlogo-changer
+Icon=bootlogochanger
+X-Osso-Type=application/x-executable
+Categories=System;
