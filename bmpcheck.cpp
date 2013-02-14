@@ -392,10 +392,10 @@ uint differNum(uint elements, QByteArray* src)
     }
 
     char* data = src->data();
-    while ((ushort)data[2] != (ushort)data[4])
+    while (*(ushort*)&data[2] != *(ushort*)&data[4])
         // if 2nd and 3rd elements are the same - different elements ends
     {
-        if ((elements - num) == 1)
+        if ((elements - num) == 2)
         {
             num = num + 2;
             return num;
@@ -403,6 +403,7 @@ uint differNum(uint elements, QByteArray* src)
         data = data + 2;
         num++;
     }
+
     return num;
 }
 // write differ group
@@ -473,6 +474,7 @@ bool bmpCompresRle16(QString srcPath, QString destPath)
         {
             src.remove((width * 2) * (i + 1), padding);
         }
+        //        elements = elements + height;
     }
 
     while (elements > 0) // when 0, there is no more elements

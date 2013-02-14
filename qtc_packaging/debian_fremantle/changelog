@@ -1,5 +1,6 @@
-n900-bootlogo-changer (1.0) stable; urgency=low
+n900-bootlogo-changer (1.0.1) stable; urgency=low
 
-  * Initial Release.
+  * GUI fix.
+  * Added limitations for image sizes (width and height).
 
- -- RaANdOoM <random.m3m@gmail.com>  Wed, 6 Feb 2013 00:28:12 +0400
+ -- RaANdOoM <random.m3m@gmail.com>  Wed, 15 Feb 2013 00:28:12 +0400

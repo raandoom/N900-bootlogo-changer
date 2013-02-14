@@ -81,6 +81,8 @@ private:
     QString rdPath;
     bool isRdConverted;
 
+    QAction *enableAnySizes;
+
     QStackedWidget *stackWidget;
     QWidget *centralW;
     QVBoxLayout *rightTopL;
@@ -149,6 +151,7 @@ private:
     QProcess *shell;
 
 private slots:
+    void changeImageLimit(bool state);
     void showAbout();
 
     bool eventFilter(QObject *obj, QEvent *event);

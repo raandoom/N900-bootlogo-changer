@@ -30,6 +30,11 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowTitle("BootLogo Changer for Maemo 5");
 
     QMenuBar *menu = menuBar();
+    enableAnySizes = new QAction("Allow any image sizes", this);
+    enableAnySizes->setCheckable(true);
+    connect(enableAnySizes, SIGNAL(triggered(bool)),
+            this, SLOT(changeImageLimit(bool)));
+    menu->addAction(enableAnySizes);
     menu->addAction("About", this, SLOT(showAbout()));
     menu->addAction("About Qt", qApp, SLOT(aboutQt()));
 
@@ -74,28 +79,32 @@ MainWindow::MainWindow(QWidget *parent) :
     // Background button
     bgBtn = new QPushButton("Background color", this);
     bgBtn->setFixedWidth(bgBtn->sizeHint().width() + sizeStep);
-    bgBtn->setDisabled(true);
+    //    bgBtn->setDisabled(true);
+    bgBtn->setCheckable(true);
     connect(bgBtn, SIGNAL(clicked()), this, SLOT(bgBtnClicked()));
     bgBtn->installEventFilter(this);
     rightTopL->addWidget(bgBtn, 0, Qt::AlignRight);
     // Logo button
     logoBtn = new QPushButton("Logo image", this);
     logoBtn->setFixedWidth(bgBtn->sizeHint().width() + sizeStep);
-    logoBtn->setDisabled(true);
+    //    logoBtn->setDisabled(true);
+    logoBtn->setCheckable(true);
     connect(logoBtn, SIGNAL(clicked()), this, SLOT(logoBtnClicked()));
     logoBtn->installEventFilter(this);
     rightTopL->addWidget(logoBtn, 0, Qt::AlignRight);
     // USB button
     usbBtn = new QPushButton("USB icon", this);
     usbBtn->setFixedWidth(bgBtn->sizeHint().width() + sizeStep);
-    usbBtn->setDisabled(true);
+    //    usbBtn->setDisabled(true);
+    usbBtn->setCheckable(true);
     connect(usbBtn, SIGNAL(clicked()), this, SLOT(usbBtnClicked()));
     usbBtn->installEventFilter(this);
     rightTopL->addWidget(usbBtn, 0, Qt::AlignRight);
     // RD button
     rdBtn = new QPushButton("R&D icon", this);
     rdBtn->setFixedWidth(bgBtn->sizeHint().width() + sizeStep);
-    rdBtn->setDisabled(true);
+    //    rdBtn->setDisabled(true);
+    rdBtn->setCheckable(true);
     connect(rdBtn, SIGNAL(clicked()), this, SLOT(rdBtnClicked()));
     rdBtn->installEventFilter(this);
     rightTopL->addWidget(rdBtn, 0, Qt::AlignRight | Qt::AlignTop);
@@ -134,6 +143,35 @@ MainWindow::MainWindow(QWidget *parent) :
     createApply();
     stackWidget->addWidget(applyW);
 }
+void MainWindow::changeImageLimit(bool state)
+{
+    if (state)
+    {
+        int button =
+                QMessageBox::warning(this, "WARNING!",
+                                     "Use this option on your own risk!\n"
+                                     "You try to DISABLE LIMITATIONS for image sizes.\n"
+                                     "Default sizes is: logo - 416x72, usb - 40x40, r&d - 64x54.\n"
+                                     "It will allow you use images with width and height less than default image.\n"
+                                     "This images can brick your phone, but you can unbrick it with Cold Flashing (xloader.bin and secondary.bin are required).\n"
+                                     "Do you realy want to DISABLE LIMITATIONS?",
+                                     QMessageBox::Yes,
+                                     QMessageBox::No);
+        if (button == QMessageBox::Yes)
+            enableAnySizes->setChecked(true);
+        else if (button == QMessageBox::No)
+            enableAnySizes->setChecked(false);
+
+    }
+    else
+    {
+        QMessageBox::warning(this, "WARNING!",
+                             "Width and height limitations are enabled now.\n"
+                             "With this option applicattion does not allow you to use images with sizes less than default.\n"
+                             "Default sizes is: 416x72 for logo, 40x40 for usb, 64x54 for r&d.\n"
+                             );
+    }
+}
 void MainWindow::showAbout()
 {
     QDialog *about = new QDialog(this);
@@ -161,7 +199,8 @@ void MainWindow::showAbout()
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
     // if disabled Background button clicked
-    if (obj == bgBtn && bgBtn->isEnabled() == false)
+    //    if (obj == bgBtn && bgBtn->isEnabled() == false)
+    if (obj == bgBtn && bgBtn->isChecked() == false)
     {
         if (event->type() == QEvent::MouseButtonRelease)
         {
@@ -171,7 +210,8 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
         else return false;
     }
     // if disabled Logo button clicked
-    else if (obj == logoBtn && logoBtn->isEnabled() == false)
+    //    else if (obj == logoBtn && logoBtn->isEnabled() == false)
+    else if (obj == logoBtn && logoBtn->isChecked() == false)
     {
         if (event->type() == QEvent::MouseButtonRelease)
         {
@@ -181,7 +221,8 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
         else return false;
     }
     // if disabled USB button clicked
-    else if (obj == usbBtn && usbBtn->isEnabled() == false)
+    //    else if (obj == usbBtn && usbBtn->isEnabled() == false)
+    else if (obj == usbBtn && usbBtn->isChecked() == false)
     {
         if (event->type() == QEvent::MouseButtonRelease)
         {
@@ -191,7 +232,8 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
         else return false;
     }
     // if RD button clicked
-    else if (obj == rdBtn && rdBtn->isEnabled() == false)
+    //    else if (obj == rdBtn && rdBtn->isEnabled() == false)
+    else if (obj == rdBtn && rdBtn->isChecked() == false)
     {
         if (event->type() == QEvent::MouseButtonRelease)
         {
@@ -217,7 +259,8 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 // Background button clicked
 void MainWindow::bgBtnClicked()
 {
-    if (bgBtn->isEnabled() == false)
+    //    if (bgBtn->isEnabled() == false)
+    if (bgBtn->isChecked() == false)
     {
         if (bgBtn->width() == logoBtn->width() &&
                 logoBtn->width() == usbBtn->width() &&
@@ -242,22 +285,28 @@ void MainWindow::bgBtnClicked()
             {
                 rdBtn->setFixedWidth(rdBtn->width() - sizeInc);
             }
-            bgBtn->setFixedWidth(bgBtn->width() + sizeInc);
+            bgBtn->setFixedWidth(bgBtn->sizeHint().width() + sizeStep + sizeInc);
         }
-        bgInfoW->show();
-        bgBtn->setEnabled(true);
         if (logoInfoW->isVisible() == true) logoInfoW->hide();
-        logoBtn->setDisabled(true);
+        //        logoBtn->setDisabled(true);
+        logoBtn->setChecked(false);
         if (usbInfoW->isVisible() == true) usbInfoW->hide();
-        usbBtn->setDisabled(true);
+        //        usbBtn->setDisabled(true);
+        usbBtn->setChecked(false);
         if (rdInfoW->isVisible() == true) rdInfoW->hide();
-        rdBtn->setDisabled(true);
+        //        rdBtn->setDisabled(true);
+        rdBtn->setChecked(false);
+
+        bgInfoW->show();
+        //        bgBtn->setEnabled(true);
+        bgBtn->setChecked(true);
     }
 }
 // Logo button clicked
 void MainWindow::logoBtnClicked()
 {
-    if (logoBtn->isEnabled() == false)
+    //    if (logoBtn->isEnabled() == false)
+    if (logoBtn->isChecked() == false)
     {
         if (bgBtn->width() == logoBtn->width() &&
                 logoBtn->width() == usbBtn->width() &&
@@ -282,23 +331,29 @@ void MainWindow::logoBtnClicked()
             {
                 rdBtn->setFixedWidth(rdBtn->width() - sizeInc);
             }
-            logoBtn->setFixedWidth(bgBtn->width() + sizeInc);
+            logoBtn->setFixedWidth(bgBtn->sizeHint().width() + sizeStep + sizeInc);
         }
         if (bgInfoW->isVisible() == true) bgInfoW->hide();
-        bgBtn->setDisabled(true);
-        logoInfoW->show();
-        logoBtn->setEnabled(true);
+        //        bgBtn->setDisabled(true);
+        bgBtn->setChecked(false);
         if (usbInfoW->isVisible() == true) usbInfoW->hide();
-        usbBtn->setDisabled(true);
+        //        usbBtn->setDisabled(true);
+        usbBtn->setChecked(false);
         if (rdInfoW->isVisible() == true) rdInfoW->hide();
-        rdBtn->setDisabled(true);
+        //        rdBtn->setDisabled(true);
+        rdBtn->setChecked(false);
+
+        logoInfoW->show();
+        //        logoBtn->setEnabled(true);
+        logoBtn->setChecked(true);
     }
     logoPreview->setPalette(QPalette(bgColor));
 }
 // USB button clicked
 void MainWindow::usbBtnClicked()
 {
-    if (usbBtn->isEnabled() == false)
+    //    if (usbBtn->isEnabled() == false)
+    if (usbBtn->isChecked() == false)
     {
         if (bgBtn->width() == logoBtn->width() &&
                 logoBtn->width() == usbBtn->width() &&
@@ -323,23 +378,29 @@ void MainWindow::usbBtnClicked()
             {
                 rdBtn->setFixedWidth(rdBtn->width() - sizeInc);
             }
-            usbBtn->setFixedWidth(bgBtn->width() + sizeInc);
+            usbBtn->setFixedWidth(bgBtn->sizeHint().width() + sizeStep + sizeInc);
         }
         if (bgInfoW->isVisible() == true) bgInfoW->hide();
-        bgBtn->setDisabled(true);
+        //        bgBtn->setDisabled(true);
+        bgBtn->setChecked(false);
         if (logoInfoW->isVisible() == true) logoInfoW->hide();
-        logoBtn->setDisabled(true);
-        usbInfoW->show();
-        usbBtn->setEnabled(true);
+        //        logoBtn->setDisabled(true);
+        logoBtn->setChecked(false);
         if (rdInfoW->isVisible() == true) rdInfoW->hide();
-        rdBtn->setDisabled(true);
+        //        rdBtn->setDisabled(true);
+        rdBtn->setChecked(false);
+
+        usbInfoW->show();
+        //        usbBtn->setEnabled(true);
+        usbBtn->setChecked(true);
     }
     usbPreview->setPalette(QPalette(bgColor));
 }
 // RD button clicked
 void MainWindow::rdBtnClicked()
 {
-    if (rdBtn->isEnabled() == false)
+    //    if (rdBtn->isEnabled() == false)
+    if (rdBtn->isChecked() == false)
     {
         if (bgBtn->width() == logoBtn->width() &&
                 logoBtn->width() == usbBtn->width() &&
@@ -364,16 +425,21 @@ void MainWindow::rdBtnClicked()
             {
                 usbBtn->setFixedWidth(usbBtn->width() - sizeInc);
             }
-            rdBtn->setFixedWidth(bgBtn->width() + sizeInc);
+            rdBtn->setFixedWidth(bgBtn->sizeHint().width() + sizeStep + sizeInc);
         }
         if (bgInfoW->isVisible() == true) bgInfoW->hide();
-        bgBtn->setDisabled(true);
+        //        bgBtn->setDisabled(true);
+        bgBtn->setChecked(false);
         if (logoInfoW->isVisible() == true) logoInfoW->hide();
-        logoBtn->setDisabled(true);
+        //        logoBtn->setDisabled(true);
+        logoBtn->setChecked(false);
         if (usbInfoW->isVisible() == true) usbInfoW->hide();
-        usbBtn->setDisabled(true);
+        //        usbBtn->setDisabled(true);
+        usbBtn->setChecked(false);
+
         rdInfoW->show();
-        rdBtn->setEnabled(true);
+        //        rdBtn->setEnabled(true);
+        rdBtn->setChecked(true);
     }
     rdPreview->setPalette(QPalette(bgColor));
 }
@@ -784,8 +850,21 @@ void MainWindow::logoSelectImage()
         return;
     }
 
+    QImage logo(tempPath);
+    if (enableAnySizes->isChecked() == false)
+    {
+        if ((logo.width() < 416) || (logo.height() < 72))
+        {
+            QMessageBox::warning(this, "Error!",
+                                 "Selected image has width or/and height less than default image!\n"
+                                 "Default size for logo is 416x72.\n"
+                                 "If you want to use this image anyway - enable any image sizes from the menu bar.");
+            return;
+        }
+    }
+
     logoPath = tempPath;
-    logoPreview->setPixmap(QPixmap::fromImage(QImage(logoPath)));
+    logoPreview->setPixmap(QPixmap::fromImage(logo));
     logoFileName->setText(QFileInfo(logoPath).fileName());
 }
 //--- USB ----------------------------------------------------------------------
@@ -886,8 +965,21 @@ void MainWindow::usbSelectImage()
         return;
     }
 
+    QImage usb(tempPath);
+    if (enableAnySizes->isChecked() == false)
+    {
+        if ((usb.width() < 40) || (usb.height() < 40))
+        {
+            QMessageBox::warning(this, "Error!",
+                                 "Selected image has width or/and height less than default image!\n"
+                                 "Default size for usb is 40x40.\n"
+                                 "If you want to use this image anyway - enable any image sizes from the menu bar.");
+            return;
+        }
+    }
+
     usbPath = tempPath;
-    usbPreview->setPixmap(QPixmap::fromImage(QImage(usbPath)));
+    usbPreview->setPixmap(QPixmap::fromImage(usb));
     usbFileName->setText(QFileInfo(usbPath).fileName());
 }
 //--- RD -----------------------------------------------------------------------
@@ -993,8 +1085,21 @@ void MainWindow::rdSelectImage()
         return;
     }
 
+    QImage rd(tempPath);
+    if (enableAnySizes->isChecked() == false)
+    {
+        if ((rd.width() < 64) || (rd.height() < 54))
+        {
+            QMessageBox::warning(this, "Error!",
+                                 "Selected image has width or/and height less than default image!\n"
+                                 "Default size for r&d is 64x54.\n"
+                                 "If you want to use this image anyway - enable any image sizes from the menu bar.");
+            return;
+        }
+    }
+
     rdPath = tempPath;
-    rdPreview->setPixmap(QPixmap::fromImage(QImage(rdPath)));
+    rdPreview->setPixmap(QPixmap::fromImage(rd));
     rdFileName->setText(QFileInfo(rdPath).fileName());
 }
 
@@ -1374,6 +1479,13 @@ void MainWindow::checkAll()
 
 void MainWindow::closeApply()
 {
+    if (QFile(appFolder + QFileInfo(logoPath).fileName() + ".temp").exists())
+        QFile(appFolder + QFileInfo(logoPath).fileName() + ".temp").remove();
+    if (QFile(appFolder + QFileInfo(usbPath).fileName() + ".temp").exists())
+        QFile(appFolder + QFileInfo(usbPath).fileName() + ".temp").remove();
+    if (QFile(appFolder + QFileInfo(rdPath).fileName() + ".temp").exists())
+        QFile(appFolder + QFileInfo(rdPath).fileName() + ".temp").remove();
+
     applyLog->clear();
     applyCheckBtn->setEnabled(true);
     showNormal();
