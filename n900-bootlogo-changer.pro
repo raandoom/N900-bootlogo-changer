@@ -40,10 +40,10 @@ desktop.files = \
 desktop.path = /usr/share/applications/hildon
 INSTALLS += desktop
 
-icon48.files = \
+icon.files = \
     bootlogochanger.png
-icon48.path = /usr/share/icons/hicolor/48x48/apps
-INSTALLS += icon48
+icon.path = /usr/share/icons/hicolor/64x64/apps
+INSTALLS += icon
 
     target.path = /opt/n900-bootlogo-changer/bin
     INSTALLS += target
