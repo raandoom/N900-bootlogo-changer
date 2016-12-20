@@ -48,3 +48,6 @@ INSTALLS += icon
     target.path = /opt/n900-bootlogo-changer/bin
     INSTALLS += target
 }
+
+FORMS += \
+    mainwindow.ui

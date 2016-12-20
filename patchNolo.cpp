@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "ui_mainwindow.h"
 #include <QDebug>
 
 bool extractLoaderAndSecondaryFromMtd()
@@ -60,7 +61,7 @@ bool extractLoaderAndSecondaryFromMtd()
 
 void MainWindow::patchNolo()
 {
-    applyPatchBtn->setDisabled(true);
+    ui->applyPatchBtn->setDisabled(true);
 
     applyLog->append("");
     applyLog->append("Patching started...");

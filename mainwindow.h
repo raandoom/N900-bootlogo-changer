@@ -3,6 +3,7 @@
 
 #include "colorconvert.h"
 #include "bmpcheck.h"
+
 #include <QMainWindow>
 #include <QStackedWidget>
 #include <QBoxLayout>
@@ -47,10 +48,16 @@
 #define MAX_USB_SIZE 1089
 #define MAX_RD_SIZE 3954
 
+namespace Ui {
+class MainWindow;
+}
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+
+    Ui::MainWindow *ui;
+
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow()
@@ -73,22 +80,14 @@ public:
     }
 
 private:
-    QColor bgColor;
+    QColor  bgColor;
     QString logoPath;
-    bool isLogoConvreted;
     QString usbPath;
-    bool isUsbConverted;
     QString rdPath;
-    bool isRdConverted;
 
     QAction *enableAnySizes;
 
-    QStackedWidget *stackWidget;
-    QWidget *centralW;
-    QVBoxLayout *rightTopL;
-    QWidget *startInfoW;
     // Background frame
-    QWidget *bgInfoW;
     QCheckBox *bgCheck;
     QPushButton *bgDefaultBtn;
     QComboBox *bgSetAsBox;
@@ -102,7 +101,6 @@ private:
     QLabel *bgColorPreview;
     QPushButton *bgSetColorBtn;
     // Logo frame
-    QWidget *logoInfoW;
     QCheckBox *logoCheck;
     QPushButton *logoDefaultBtn;
     QLabel *logoFileNameLabel;
@@ -110,7 +108,6 @@ private:
     QLabel *logoPreview;
     QPushButton *logoSelectBtn;
     // USB frame
-    QWidget *usbInfoW;
     QCheckBox *usbCheck;
     QPushButton *usbDefaultBtn;
     QLabel *usbFileNameLabel;
@@ -118,7 +115,6 @@ private:
     QLabel *usbPreview;
     QPushButton *usbSelectBtn;
     // RD frame
-    QWidget *rdInfoW;
     QCheckBox *rdCheck;
     QPushButton *rdDefaultBtn;
     QCheckBox *rdShowOnPreview;
@@ -128,23 +124,12 @@ private:
     QLabel *rdPreview;
     QPushButton *rdSelectBtn;
     // Preview
-    QWidget *previewW;
     QLabel *previewLogoLabel;
     QLabel *previewUsbLabel;
     QLabel *previewRdLabel;
     // Apply
-    QWidget *applyW;
     QTextEdit *applyLog;
-    QPushButton *applyCheckBtn;
-    QPushButton *applyPatchBtn;
-    QPushButton *applyReturn;
     // Right buttons
-    QPushButton *bgBtn;
-    QPushButton *logoBtn;
-    QPushButton *usbBtn;
-    QPushButton *rdBtn;
-    QPushButton *previewBtn;
-    QPushButton *applyBtn;
     QPushButton *previewClose;
 
     // Process
@@ -163,7 +148,6 @@ private slots:
     void showPreview();
     void applyBtnClicked();
     // Create frames
-    void createStartInfo();
     void createBgInfo();
     void createLogoInfo();
     void createUsbInfo();
@@ -199,12 +183,7 @@ private slots:
     void checkAll();
     void patchNolo();
     void flashNolo();
-    void closeApply();
-
-signals:
-    
-public slots:
-    
+    void closeApply();    
 };
 
 #endif // MAINWINDOW_H
